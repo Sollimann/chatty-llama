@@ -1,10 +1,8 @@
 pub mod api;
-pub mod model;
-
-use api::ws::chat_route;
-// use model::get_language_model;
+pub mod handler;
 
 use actix_web::{App, HttpServer};
+use api::ws::chat_route;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {

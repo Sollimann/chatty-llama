@@ -2,7 +2,7 @@ use dotenv::dotenv;
 use llm::models::Llama;
 use std::env;
 
-pub fn get_language_model() -> Llama {
+pub fn load_language_model() -> Llama {
     use std::path::PathBuf;
     dotenv().ok();
     let model_path = env::var("MODEL_PATH").expect("MODEL_PATH must be set");
