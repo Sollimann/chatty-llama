@@ -3,7 +3,7 @@ pub mod handler;
 
 use std::io::Write;
 
-use actix_web::{App, HttpServer};
+use actix_web::{middleware::Logger, web, App, HttpServer};
 use api::ws::chat_route;
 use handler::model::{inference_callback, load_language_model};
 
@@ -16,6 +16,8 @@ fn print_token(t: String) {
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
     use llm::Model;
+    use std::sync::Arc;
+    env_logger::init();
 
     let llama = load_language_model();
     println!("model loaded");
@@ -75,10 +77,17 @@ async fn main() -> std::io::Result<()> {
     //     )
     //     .unwrap_or_else(|e| panic!("{e}"));
 
-    // println!("Res: {res}");
+    println!("Host websocket api!");
+    let llama = Arc::new(llama);
+    let model = web::Data::new(llama);
 
-    HttpServer::new(move || App::new().service(chat_route))
-        .bind("127.0.0.1:8080")?
-        .run()
-        .await
+    HttpServer::new(move || {
+        App::new()
+            .wrap(Logger::default())
+            .app_data(model.clone())
+            .service(chat_route)
+    })
+    .bind("127.0.0.1:8080")?
+    .run()
+    .await
 }
