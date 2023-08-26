@@ -50,3 +50,9 @@ pub fn inference_callback<'a>(
         _ => Ok(Continue),
     }
 }
+
+// A mock function to represent inference (replace with actual implementation)
+pub(crate) fn run_inference(model: &Llama, text: &str) -> String {
+    // Replace this with the actual model inference code
+    format!("Bot: Inference for {}: {}", text, "some result from model")
+}
