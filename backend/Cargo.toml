@@ -11,6 +11,11 @@ actix-web = { version = "4.2.0" }
 actix-web-actors = { version = "4.2.0" }
 dotenv ={ version = "0.15.0"}
 env_logger = "0.10.0"
-llm = { git = "https://github.com/rustformers/llm.git", branch = "main", features = ["metal"] }
+llm = { git = "https://github.com/rustformers/llm.git", branch = "main", features = ["llama"] }
 serde = { version = "1.0.160", features = ["derive"] }
 thiserror = "1.0"
+rand = { version = "0.8.5" }
+
+# this is an optimization that speeds up the llm crate significantly
+[profile.dev.package.ggml-sys]
+opt-level = 3
