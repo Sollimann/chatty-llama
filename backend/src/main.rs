@@ -5,7 +5,7 @@ use std::io::Write;
 
 use actix_web::{middleware::Logger, web, App, HttpServer};
 use api::ws::chat_route;
-use handler::model::{inference_callback, load_language_model};
+use handler::model::{inference_callback, load_language_model, session_setup};
 
 fn print_token(t: String) {
     print!("{t}");
@@ -26,9 +26,6 @@ async fn main() -> std::io::Result<()> {
     let mut session = Model::start_session(&llama, Default::default());
 
     println!("Started session");
-    let mut res = String::new();
-    let mut rng = rand::thread_rng();
-    let mut buf = String::new();
 
     static CHARACTER_NAME: &str = "### Assistant";
     static USER_NAME: &str = "### Human";
@@ -41,46 +38,11 @@ async fn main() -> std::io::Result<()> {
     );
 
     println!("Set up initial prompt");
-    session
-        .feed_prompt(
-            &llama,
-            format!("{persona}\n{history}").as_str(),
-            &mut Default::default(),
-            llm::feed_prompt_callback(|resp| match resp {
-                llm::InferenceResponse::PromptToken(t)
-                | llm::InferenceResponse::InferredToken(t) => {
-                    print_token(t);
-
-                    Ok::<llm::InferenceFeedback, std::convert::Infallible>(
-                        llm::InferenceFeedback::Continue,
-                    )
-                }
-                _ => Ok(llm::InferenceFeedback::Continue),
-            }),
-        )
-        .expect("Failed to ingest initial prompt.");
-
-    // session
-    //     .infer(
-    //         &llama,
-    //         &mut rng,
-    //         &llm::InferenceRequest {
-    //             prompt: format!("{persona}\n{history}\n{CHARACTER_NAME}:")
-    //                 .as_str()
-    //                 .into(),
-    //             parameters: &llm::InferenceParameters::default(),
-    //             play_back_previous_tokens: false,
-    //             maximum_token_count: None,
-    //         },
-    //         &mut Default::default(),
-    //         inference_callback(String::from(USER_NAME), &mut buf, &mut res),
-    //     )
-    //     .unwrap_or_else(|e| panic!("{e}"));
-
-    println!("Host websocket api!");
     let llama = Arc::new(llama);
+    // let session = session_setup(llama.clone());
     let model = web::Data::new(llama);
 
+    println!("Host websocket api!");
     HttpServer::new(move || {
         App::new()
             .wrap(Logger::default())

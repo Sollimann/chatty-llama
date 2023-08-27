@@ -12,7 +12,7 @@ actix-web-actors = { version = "4.2.0" }
 tokio = { version = "1.32.0", features = ["full"] }
 dotenv ={ version = "0.15.0"}
 env_logger = "0.10.0"
-llm = { git = "https://github.com/rustformers/llm.git", branch = "main", features = ["llama"] }
+llm = { git = "https://github.com/rustformers/llm.git", branch = "main" }
 serde = { version = "1.0.160", features = ["derive"] }
 thiserror = "1.0"
 rand = { version = "0.8.5" }

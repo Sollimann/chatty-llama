@@ -1,14 +1,15 @@
-use crate::handler::model::run_inference;
+use crate::handler::model::{run_inference, session_setup};
 use actix::{Actor, StreamHandler};
 use actix_web::{get, web, Error, HttpRequest, HttpResponse};
 use actix_web_actors::ws;
-use llm::models::Llama;
+use llm::{models::Llama, InferenceSession};
 use std::sync::Arc;
 
 /// Define our WebSocket actor
 pub struct Conversation {
     pub messages: Vec<Message>,
     llama: Arc<Llama>,
+    session: InferenceSession,
 }
 
 pub struct Message {
@@ -24,12 +25,12 @@ impl Actor for Conversation {
 impl StreamHandler<Result<ws::Message, ws::ProtocolError>> for Conversation {
     fn handle(&mut self, msg: Result<ws::Message, ws::ProtocolError>, ctx: &mut Self::Context) {
         if let Ok(ws::Message::Text(text)) = msg {
-            // Use the model for inference
-            let inference_result = run_inference(&self.llama, &text);
-            println!("inference res: {inference_result}");
+            println!("Running inference...");
+            let inference_result = run_inference(&self.llama, &mut self.session, &text);
+            println!("Inference complete!");
 
             // Send the inference result back to the client
-            let response = format!("Bot: {}", text);
+            let response = format!("Bot: {}", inference_result);
             ctx.text(response);
         }
     }
@@ -41,12 +42,16 @@ async fn chat_route(
     stream: web::Payload,
     model: web::Data<Arc<Llama>>,
 ) -> Result<HttpResponse, Error> {
-    // let m = model.as_ref();
     println!("ws endpoint!");
+    let model = model.as_ref().clone();
+    println!("init session");
+    let session = session_setup(model.clone());
+
     ws::start(
         Conversation {
-            llama: model.as_ref().clone(),
+            llama: model,
             messages: vec![],
+            session,
         },
         &req,
         stream,
