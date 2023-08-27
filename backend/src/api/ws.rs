@@ -48,6 +48,11 @@ pub async fn ws(
                         return;
                     }
                 }
+                Message::Close(_) => {
+                    println!("Client requested close. Cleaning up.");
+                    // Do cleanup if needed
+                    break;
+                }
                 _ => break,
             }
         }
