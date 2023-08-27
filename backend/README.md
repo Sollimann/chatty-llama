@@ -12,7 +12,7 @@ $ cargo install --feature=ssl websocat
 Start websocket server
 
 ```
-$ RUST_LOG=info cargo run
+$ RUST_LOG=info RUSTFLAGS="-C target-cpu=native" cargo run --release
 ```
 
 Call websocket endpoint
