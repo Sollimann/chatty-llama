@@ -3,6 +3,7 @@ use actix_web::{web, Error, HttpRequest, HttpResponse};
 use actix_ws::Message;
 use llm::{models::Llama, InferenceSession};
 use std::sync::Arc;
+use tokio::time::{timeout, Duration};
 use tokio_stream::StreamExt;
 
 pub async fn ws(
@@ -16,7 +17,7 @@ pub async fn ws(
 
     println!("Started websocket connection...");
     actix_rt::spawn(async move {
-        println!("Prepaing inference model...");
+        println!("Preparing inference model...");
         let inference_session: InferenceSession =
             web::block(move || session_setup(model)).await.unwrap();
 
@@ -34,24 +35,46 @@ pub async fn ws(
                     let model_for_this_iteration = model_clone.clone();
                     let session_clone = inference_session.clone();
 
-                    println!("Running inference...");
+                    log::info!("Running inference...");
+                    let inference_result = timeout(
+                        Duration::from_secs(40),
+                        web::block(move || {
+                            let mut locked_session = session_clone.lock().unwrap();
+                            run_inference(&model_for_this_iteration, &mut *locked_session, &text)
+                        }),
+                    )
+                    .await;
 
-                    let inference_result = web::block(move || {
-                        let mut locked_session = session_clone.lock().unwrap();
-                        run_inference(&model_for_this_iteration, &mut *locked_session, &text)
-                    })
-                    .await
-                    .unwrap();
-
-                    println!("Finished inference!");
-
-                    let bot_response = format!("Bot: {:?}", inference_result);
-                    if session.text(bot_response).await.is_err() {
-                        return;
+                    match inference_result {
+                        Ok(Ok(result)) => {
+                            log::info!("Finished inference!");
+                            let bot_response = format!("{result:?}");
+                            let bot_response =
+                                bot_response.trim_start_matches('"').trim_end_matches('"');
+                            if session.text(bot_response).await.is_err() {
+                                return;
+                            }
+                        }
+                        Ok(Err(e)) => {
+                            log::error!("Error during inference: {:?}", e);
+                            // Handle this error according to your needs
+                            return;
+                        }
+                        Err(_) => {
+                            log::error!("Request timed out after 40 seconds.");
+                            // Handle timeout error, for example by sending a timeout message to the client
+                            if session
+                                .text("Request timed out after 40 seconds... Try again!")
+                                .await
+                                .is_err()
+                            {
+                                return;
+                            }
+                        }
                     }
                 }
                 Message::Close(_) => {
-                    println!("Client requested close. Cleaning up.");
+                    log::info!("Client requested close. Cleaning up.");
                     // Do cleanup if needed
                     break;
                 }

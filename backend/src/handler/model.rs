@@ -17,7 +17,7 @@ pub fn load_language_model() -> Llama {
         prefer_mmap: true,
         context_size: 2048,
         lora_adapters: None,
-        use_gpu: false,
+        use_gpu: true,
         gpu_layers: None,
         rope_overrides: None,
         n_gqa: None,
