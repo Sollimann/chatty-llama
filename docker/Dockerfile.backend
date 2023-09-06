@@ -1,0 +1,15 @@
+FROM rust:1.71-slim-buster
+
+# Set the working directory
+WORKDIR /usr/src/backend
+
+# Install necessary dependencies for OpenSSL and pkg-config
+RUN apt-get update && apt-get install -y pkg-config libssl-dev && rm -rf /var/lib/apt/lists/*
+
+# Copy over your app and build it
+COPY backend/ .
+RUN cargo build --release
+
+# Run the app
+# CMD ["tail", "-f", "/dev/null"]
+ENTRYPOINT ["./target/release/backend"]

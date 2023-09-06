@@ -1,0 +1,40 @@
+version: "3"
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    networks:
+      - caddy-network
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    volumes:
+      - ./backend/models/llama-2-7b-chat.ggmlv3.q2_K.bin:/usr/src/backend/models/llama-2-7b-chat.ggmlv3.q2_K.bin
+    environment:
+      MODEL_PATH: "./models/llama-2-7b-chat.ggmlv3.q2_K.bin"
+    networks:
+      - caddy-network
+    expose:
+      - 8080
+
+  caddy:
+    image: caddy:2
+    container_name: caddy
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile
+    ports:
+      - "80:80"
+    networks:
+      - caddy-network
+    depends_on:
+      - frontend
+      - backend
+
+networks:
+  caddy-network:
+    name: caddy-network

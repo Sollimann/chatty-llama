@@ -1,7 +1,7 @@
 import subprocess
 from huggingface_hub import hf_hub_download
 
-TOKEN = "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"
+TOKEN = "<add-token-here>"
 subprocess.run(["huggingface-cli", "login", "--token", TOKEN])
 
 # https://huggingface.co/TheBloke/Llama-2-13B-chat-GGML

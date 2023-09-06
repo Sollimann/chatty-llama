@@ -1,0 +1,9 @@
+{
+  auto_https off # turn of automatic https feature
+}
+
+# Handle incoming traffic on port 80 (standard port for HTTP)
+:80 {
+  reverse_proxy /ws/* backend:8080 # serve websocket api
+  reverse_proxy frontend:80 # serve the react app
+}

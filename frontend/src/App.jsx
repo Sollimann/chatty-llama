@@ -20,16 +20,17 @@ function App() {
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const [ws, setWs] = useState(null);
+  const websocketURL = "ws://localhost:80/ws/";
 
   useEffect(() => {
-    const websocket = new WebSocket("ws://localhost:8080/ws/");
+    const websocket = new WebSocket(websocketURL);
 
     websocket.onopen = () => {
       console.log("Connected to the WebSocket server");
     };
 
     websocket.onmessage = (event) => {
-const botResponse = event.data; // Assuming server sends raw string as response
+      const botResponse = event.data; // Assuming server sends raw string as response
 
       setMessages((prev) => [
         ...prev,
