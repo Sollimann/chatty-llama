@@ -5,13 +5,11 @@ import subprocess
 import os
 from huggingface_hub import hf_hub_download
 
-# subprocess.run(["rm", "-rf", "/backend/models/"])
-
 # Get TOKEN from environment variable
 TOKEN = os.environ.get("HF_TOKEN")
 
 if not TOKEN:
-    raise ValueError("TOKEN environment variable is not set")
+    raise ValueError("HF_TOKEN environment variable is not set")
 
 subprocess.run(["huggingface-cli", "login", "--token", TOKEN])
 
