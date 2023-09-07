@@ -7,6 +7,13 @@
     <em>A fullstack chat app utilizing Llama LLMs</em>
 </p>
 
+[![Build Status](https://github.com/Sollimann/bonsai/workflows/rust-ci/badge.svg)](https://github.com/Sollimann/bonsai/actions)
+[![minimum rustc 1.60](https://img.shields.io/badge/rustc-1.60+-blue.svg)](https://rust-lang.github.io/rfcs/2495-min-rust-version.html)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Sollimann/chatty-llama/graphs/commit-activity)
+[![GitHub pull-requests](https://img.shields.io/github/issues-pr/Sollimann/chatty-llama.svg)](https://GitHub.com/Sollimann/chatty-llama/pulls)
+[![GitHub pull-requests closed](https://img.shields.io/github/issues-pr-closed/Sollimann/chatty-llama.svg)](https://GitHub.com/Sollimann/chatty-llama/pulls)
+![ViewCount](https://views.whatilearened.today/views/github/Sollimann/chatty-llama.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## How to run
 
