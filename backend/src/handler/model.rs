@@ -3,32 +3,10 @@ use llm::models::Llama;
 use llm::Model;
 use std::convert::Infallible;
 use std::env;
-use std::fs;
-use std::path::Path;
 use std::sync::Arc;
 
 static CHARACTER_NAME: &str = "### Assistant";
 static USER_NAME: &str = "### Human";
-
-fn find_file(starting_path: &Path, target_filename: &str) -> Option<String> {
-    if !starting_path.exists() || !starting_path.is_dir() {
-        return None;
-    }
-
-    for entry in fs::read_dir(starting_path).unwrap() {
-        let entry = entry.unwrap();
-        let path = entry.path();
-        if path.is_dir() {
-            if let Some(found) = find_file(&path, target_filename) {
-                return Some(found);
-            }
-        } else if path.file_name().unwrap() == target_filename {
-            return Some(path.to_str().unwrap().to_string());
-        }
-    }
-
-    None
-}
 
 // Load local model from path
 pub fn load_language_model() -> Llama {
@@ -36,19 +14,6 @@ pub fn load_language_model() -> Llama {
     dotenv().ok();
 
     let model_path = env::var("MODEL_PATH").expect("MODEL_PATH must be set");
-
-    let file_name = "llama-2-7b-chat.ggmlv3.q2_K.bin";
-    let current_dir = Path::new(".");
-    match find_file(&current_dir, file_name) {
-        Some(path) => println!("File found at: {}", path),
-        None => println!("File not found."),
-    }
-
-    if Path::new(&model_path).exists() {
-        println!("The file exists at path: {}", model_path);
-    } else {
-        println!("The file does not exist at path: {}", model_path);
-    }
 
     let model_parameters = llm::ModelParameters {
         prefer_mmap: true,
