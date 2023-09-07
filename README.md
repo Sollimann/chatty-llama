@@ -45,6 +45,8 @@ $ make download-model
 $ make chatty-llama
 ```
 
+In your browser, open http://localhost:80
+
 **Enjoy!**
 
 <p align="center">
