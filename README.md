@@ -8,12 +8,12 @@
 </p>
 
 <p align="center">
-[![minimum rustc 1.60](https://img.shields.io/badge/rustc-1.60+-blue.svg)](https://rust-lang.github.io/rfcs/2495-min-rust-version.html)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://GitHub.com/Sollimann/chatty-llama/graphs/commit-activity)
-[![GitHub pull-requests](https://img.shields.io/github/issues-pr/Sollimann/chatty-llama.svg)](https://GitHub.com/Sollimann/chatty-llama/pulls)
-[![GitHub pull-requests closed](https://img.shields.io/github/issues-pr-closed/Sollimann/chatty-llama.svg)](https://GitHub.com/Sollimann/chatty-llama/pulls)
-![ViewCount](https://views.whatilearened.today/views/github/Sollimann/chatty-llama.svg)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+    <a href="https://rust-lang.github.io/rfcs/2495-min-rust-version.html"><img src="https://img.shields.io/badge/rustc-1.60+-blue.svg" alt="minimum rustc 1.60"></a>
+    <a href="https://GitHub.com/Sollimann/chatty-llama/graphs/commit-activity"><img src="https://img.shields.io/badge/Maintained%3F-yes-green.svg" alt="Maintenance"></a>
+    <a href="https://GitHub.com/Sollimann/chatty-llama/pulls"><img src="https://img.shields.io/github/issues-pr/Sollimann/chatty-llama.svg" alt="GitHub pull-requests"></a>
+    <a href="https://GitHub.com/Sollimann/chatty-llama/pulls"><img src="https://img.shields.io/github/issues-pr-closed/Sollimann/chatty-llama.svg" alt="GitHub pull-requests closed"></a>
+    <img src="https://views.whatilearened.today/views/github/Sollimann/chatty-llama.svg" alt="ViewCount">
+    <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="License: MIT"></a>
 </p>
 
 ## How to run
