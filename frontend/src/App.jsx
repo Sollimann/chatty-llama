@@ -20,32 +20,47 @@ function App() {
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const [ws, setWs] = useState(null);
-  const websocketURL = "ws://localhost:80/ws/";
 
   useEffect(() => {
-    const websocket = new WebSocket(websocketURL);
+    const createWebSocketConnection = (port) => {
+      const wsURL = `ws://localhost:${port}/ws/`;
+      console.log("Attempting connection to: ", wsURL);
+      const websocket = new WebSocket(wsURL);
 
-    websocket.onopen = () => {
-      console.log("Connected to the WebSocket server");
+      websocket.onopen = () => {
+        console.log("Connected to the WebSocket server on port", port);
+        setWs(websocket);
+      };
+
+      websocket.onerror = (error) => {
+        console.log(`WebSocket Error on port ${port}:`, error);
+        // If connection fails on port 80, try connecting on port 8080
+        if (port === 80) {
+          console.log("Attempting to connect on port 8080...");
+          createWebSocketConnection(8080);
+        }
+      };
+
+      websocket.onmessage = (event) => {
+        const botResponse = event.data; // Assuming server sends raw string as response
+
+        setMessages((prev) => [
+          ...prev,
+          {
+            message: botResponse,
+            sender: "ChattyLlama",
+          },
+        ]);
+        setIsTyping(false);
+      };
+
+      return websocket;
     };
 
-    websocket.onmessage = (event) => {
-      const botResponse = event.data; // Assuming server sends raw string as response
-
-      setMessages((prev) => [
-        ...prev,
-        {
-          message: botResponse,
-          sender: "ChattyLlama",
-        },
-      ]);
-      setIsTyping(false);
-    };
-
-    setWs(websocket);
+    const wsInstance = createWebSocketConnection(80); // Start with port 80
 
     return () => {
-      websocket.close();
+      if (wsInstance) wsInstance.close();
     };
   }, []);
 

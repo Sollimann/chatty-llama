@@ -1,0 +1,22 @@
+version: "3"
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.frontend
+    network_mode: "host"
+    environment:
+      REACT_APP_BACKEND_PORT: 8080
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/Dockerfile.backend
+    volumes:
+      - ./backend/models/llama-2-7b-chat.ggmlv3.q2_K.bin:/usr/src/backend/models/llama-2-7b-chat.ggmlv3.q2_K.bin
+    environment:
+      MODEL_PATH: "./models/llama-2-7b-chat.ggmlv3.q2_K.bin"
+      BACKEND_PORT: 80
+    network_mode: "host"

@@ -10,6 +10,10 @@ COPY ./frontend/package*.json ./
 # Install the dependencies
 RUN npm install
 
+# set env variable
+ARG REACT_APP_BACKEND_PORT
+ENV REACT_APP_BACKEND_PORT $REACT_APP_BACKEND_PORT
+
 # Copy the rest of the application
 COPY ./frontend ./
 

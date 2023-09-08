@@ -20,7 +20,6 @@
 
 #### 1. Install huggingface-cli
 
-
 ```sh
 $ make install-huggingface-cli
 ```
@@ -47,6 +46,8 @@ $ make download-model
 $ make chatty-llama
 ```
 
+**PS!** If you're having issues connecting to the `backend`, try running `make chatty-llama-host` instead.
+
 In your browser, open http://localhost:80
 
 **Enjoy!**
@@ -54,4 +55,3 @@ In your browser, open http://localhost:80
 <p align="center">
   <img src="https://github.com/Sollimann/chatty-llama/blob/main/docs/images/chat.png" width="550" ">
 </p>
-

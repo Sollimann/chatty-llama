@@ -6,3 +6,6 @@ download-model:
 
 chatty-llama:
 	docker compose up -d
+
+chatty-llama-host:
+	docker compose -f docker-compose-host.yml up -d
